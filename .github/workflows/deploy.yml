@@ -2,7 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, claude/budget-app-ai-ea4hrb]
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,9 +28,11 @@ jobs:
           node-version: 20
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - run: npm run build
+      - name: Build
+        run: npm run build
 
       - uses: actions/configure-pages@v4
 
