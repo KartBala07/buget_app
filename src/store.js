@@ -1,45 +1,41 @@
-const KEY = 'budgetapp_data';
+const KEY = 'budgetapp_data_v2';
 
-const defaultData = {
-  transactions: [
-    { id: 1, name: 'Salary', amount: 5000, type: 'income', category: 'Salary', date: '2024-01-05', emoji: '💼' },
-    { id: 2, name: 'Rent', amount: 1200, type: 'expense', category: 'Housing', date: '2024-01-06', emoji: '🏠' },
-    { id: 3, name: 'Groceries', amount: 320, type: 'expense', category: 'Food', date: '2024-01-08', emoji: '🛒' },
-    { id: 4, name: 'Netflix', amount: 15, type: 'expense', category: 'Entertainment', date: '2024-01-09', emoji: '🎬' },
-    { id: 5, name: 'Freelance', amount: 800, type: 'income', category: 'Freelance', date: '2024-01-12', emoji: '💻' },
-    { id: 6, name: 'Restaurant', amount: 85, type: 'expense', category: 'Food', date: '2024-01-14', emoji: '🍽️' },
-    { id: 7, name: 'Gas', amount: 60, type: 'expense', category: 'Transport', date: '2024-01-15', emoji: '⛽' },
-    { id: 8, name: 'Gym', amount: 45, type: 'expense', category: 'Health', date: '2024-01-16', emoji: '💪' },
-    { id: 9, name: 'Amazon', amount: 130, type: 'expense', category: 'Shopping', date: '2024-01-18', emoji: '📦' },
-    { id: 10, name: 'Coffee Shop', amount: 48, type: 'expense', category: 'Food', date: '2024-01-20', emoji: '☕' },
-  ],
-  budgets: [
-    { id: 1, category: 'Food', limit: 500, emoji: '🍔' },
-    { id: 2, category: 'Housing', limit: 1500, emoji: '🏠' },
-    { id: 3, category: 'Transport', limit: 200, emoji: '🚗' },
-    { id: 4, category: 'Entertainment', limit: 100, emoji: '🎮' },
-    { id: 5, category: 'Shopping', limit: 300, emoji: '🛍️' },
-    { id: 6, category: 'Health', limit: 150, emoji: '💊' },
-  ],
-  goals: [
-    { id: 1, name: 'Emergency Fund', target: 10000, saved: 3500, emoji: '🛡️', deadline: '2024-12-31' },
-    { id: 2, name: 'Vacation', target: 3000, saved: 800, emoji: '✈️', deadline: '2024-08-01' },
-    { id: 3, name: 'New Laptop', target: 1500, saved: 900, emoji: '💻', deadline: '2024-06-01' },
-  ],
-  userName: 'User',
-  nextId: 11,
-};
+const emptyData = () => ({
+  transactions: [],
+  budgets: [],
+  goals: [],
+  userName: '',
+  nextId: 1,
+  tutorialDone: false,
+  createdAt: new Date().toISOString().split('T')[0],
+});
 
 export function loadData() {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (!d.createdAt) d.createdAt = new Date().toISOString().split('T')[0];
+      return d;
+    }
   } catch {}
-  return defaultData;
+  return emptyData();
 }
 
 export function saveData(data) {
   localStorage.setItem(KEY, JSON.stringify(data));
+}
+
+// Share: encode full data as base64 URL param
+export function encodeShareData(data) {
+  const payload = JSON.stringify({ transactions: data.transactions, budgets: data.budgets, goals: data.goals, userName: data.userName });
+  return btoa(unescape(encodeURIComponent(payload)));
+}
+
+export function decodeShareData(encoded) {
+  try {
+    return JSON.parse(decodeURIComponent(escape(atob(encoded))));
+  } catch { return null; }
 }
 
 export const CATEGORIES = [
@@ -52,6 +48,8 @@ export const CATEGORIES = [
   { name: 'Salary', emoji: '💼' },
   { name: 'Freelance', emoji: '💻' },
   { name: 'Investment', emoji: '📈' },
+  { name: 'Education', emoji: '📚' },
+  { name: 'Utilities', emoji: '💡' },
   { name: 'Other', emoji: '📌' },
 ];
 
