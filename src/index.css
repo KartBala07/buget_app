@@ -340,7 +340,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; -webkit-fon
 
 /* ── BOTTOM NAV ── */
 .bottom-nav {
-  display: none;
+  display: none !important;
   position: fixed; bottom: 0; left: 0; right: 0;
   background: var(--bg2); border-top: 1px solid var(--border);
   z-index: 150;
@@ -403,7 +403,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; -webkit-fon
   .grid-4 { grid-template-columns: 1fr 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
   .grid-3 { grid-template-columns: 1fr; }
-  .content { padding: 14px 14px calc(var(--bottom-nav-h) + 14px + env(safe-area-inset-bottom)); }
+  .content { padding: 14px 14px 20px; }
   .topbar { padding: 0 14px; }
   .bottom-nav { display: block; }
   .tx-actions { opacity: 1 !important; }
